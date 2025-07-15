@@ -1,0 +1,55 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36" version="28.0.4">
+  <diagram name="Page-1" id="GhHlP-dc2hjkDez41XyL">
+    <mxGraphModel dx="1422" dy="786" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="NkXlAZLUb5JhhPOTYm8y-2" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;gradientColor=light-dark(#ffffff, #ededed);" vertex="1" parent="1">
+          <mxGeometry x="305" y="100" width="185" height="280" as="geometry" />
+        </mxCell>
+        <mxCell id="NkXlAZLUb5JhhPOTYm8y-3" value="PE Primary" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="357.5" y="100" width="80" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="NkXlAZLUb5JhhPOTYm8y-4" value="Puppetserver" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;gradientColor=light-dark(#ffffff, #ededed);" vertex="1" parent="1">
+          <mxGeometry x="337.5" y="140" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="NkXlAZLUb5JhhPOTYm8y-5" value="PuppetDB" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;gradientColor=light-dark(#ffffff, #ededed);" vertex="1" parent="1">
+          <mxGeometry x="340" y="180" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="NkXlAZLUb5JhhPOTYm8y-17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;startArrow=classic;startFill=1;" edge="1" parent="1" source="NkXlAZLUb5JhhPOTYm8y-6" target="NkXlAZLUb5JhhPOTYm8y-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="NkXlAZLUb5JhhPOTYm8y-6" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;gradientColor=light-dark(#ffffff, #ededed);" vertex="1" parent="1">
+          <mxGeometry x="570" y="100" width="185" height="280" as="geometry" />
+        </mxCell>
+        <mxCell id="NkXlAZLUb5JhhPOTYm8y-7" value="Orchestrator" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;gradientColor=light-dark(#ffffff, #ededed);" vertex="1" parent="1">
+          <mxGeometry x="337.5" y="225" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="NkXlAZLUb5JhhPOTYm8y-8" value="PE &quot;Console&quot;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;gradientColor=light-dark(#ffffff, #ededed);" vertex="1" parent="1">
+          <mxGeometry x="337.5" y="270" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="NkXlAZLUb5JhhPOTYm8y-9" value="The great opensource system" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="590" y="110" width="140" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="NkXlAZLUb5JhhPOTYm8y-10" value="foreman" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;gradientColor=light-dark(#ffffff, #ededed);" vertex="1" parent="1">
+          <mxGeometry x="600" y="150" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="NkXlAZLUb5JhhPOTYm8y-11" value="Perforce Puppet Agent" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;gradientColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="80" y="120" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="NkXlAZLUb5JhhPOTYm8y-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.027;entryY=0.179;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="NkXlAZLUb5JhhPOTYm8y-11" target="NkXlAZLUb5JhhPOTYm8y-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="NkXlAZLUb5JhhPOTYm8y-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="NkXlAZLUb5JhhPOTYm8y-14" target="NkXlAZLUb5JhhPOTYm8y-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="NkXlAZLUb5JhhPOTYm8y-14" value="OpenVox Agent" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;gradientColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="80" y="210" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="NkXlAZLUb5JhhPOTYm8y-16" value="foreman-proxy" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;gradientColor=light-dark(#ffffff, #ededed);" vertex="1" parent="1">
+          <mxGeometry x="340" y="320" width="120" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

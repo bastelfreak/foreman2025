@@ -213,7 +213,7 @@
         height: 550px;
       }
       .right-column .smallimg img {
-        width: 90%;
+        width: 88%;
       }
       .right-column .nowidth img {
         width: auto;
@@ -271,6 +271,13 @@ class: center, middle, inverse
 ???
 
 * who has seen this picture before because I reviewed/merged your pull request?
+
+---
+
+background-image: url(contributors.svg)
+background-size: contain
+
+## Vox Pupuli Community growth over time
 
 ---
 class: center, middle, inverse
@@ -349,86 +356,57 @@ background-size: contain
 
 <a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
 
+???
+
 * PE subscription: open source components + Console + support contract
 
 * now demo https://pe.tim.betadots.training/
 
 TimIsTesting2024!
 ---
-count: false
 
-.left-column[
-## RAL
-]
-
-.right-column[
-* Puppet uses RAL - Resource Abstraction Layer
-
-* Abstracts package manager away into Puppet resources
-
-* Implemented via types and providers
-
-```puppet
-package { 'htop':
-  ensure => 'installed',
-}
-```
-]
+background-image: url(nodeoverview.png)
+background-size: contain
 
 <a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
-
----
-
-count: false
-
-.left-column[
-## RAL
-]
-
-.right-column[
-* Puppet uses RAL - Resource Abstraction Layer
-
-* Abstracts package manager away into Puppet resources
-
-* Implemented via types and providers
-
-```puppet
-package { 'htop':
-  ensure => 'installed',
-}
-```
-
-* List available types on CLI
-
-* `puppet resource --types`
-]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
 
 ???
 
-* Switch to terminal and show? Works as root/normal user
+Node overview similar to Foreman
+* all nodes and their states, links to reports
+
+---
+
+background-image: url(nodegroupoverview.png)
+background-size: contain
+
+<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
+
+???
+
+you can create groups
+
+---
+
+background-image: url(nodegroupdetail.png)
+background-size: contain
+
+<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
+
+???
+
+you can create groups
 
 ---
 
 .left-column[
-## RAL
-### Find Resources
+## PE
+## Bolt
+### Tasks?!
 ]
 
 .right-column[
-* RAL can be triggered on the CLI!
-
-* `puppet resource package htop`
-
-```puppet
-package { 'htop':
-  ensure   => '3.4.1-1',
-  provider => 'pacman',
-}
-```
+* Bolt tasks: executeable script/binary + json file with metadata
 ]
 
 <a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
@@ -439,35 +417,33 @@ package { 'htop':
 count: false
 
 .left-column[
-## RAL
-### Find Resources
+## PE
+## Bolt
+### Tasks?!
 ]
 
 .right-column[
-* RAL can be triggered on the CLI!
+* Bolt tasks: executeable script/binary + json file with metadata
 
-* `puppet resource package htop`
-
-```puppet
-package { 'htop':
-  ensure   => '3.4.1-1',
-  provider => 'pacman',
+```json
+{
+  "puppet_task_version": 1,
+  "supports_noop": false,
+  "description": "Rename branch",
+  "parameters": {
+    "control_repo_branch": {
+      "description": "Control-repo branch",
+      "type": "String[1]"
+    }
+  }
 }
 ```
 
-* Can output all instances of a resource type
-
-* `puppet resource package`
-
-```puppet
-package { 'yamllint':
-  ensure   => '1.33.0-1',
-  provider => 'pacman',
-}
-package { 'yard':
-  ensure   => ['0.9.26'],
-  provider => 'gem',
-}
+```sh
+#!/bin/bash
+pushd /tmp/control-repo || exit
+git branch -m production old_prod
+git branch -m "$PT_control_repo_branch" production
 ```
 ]
 
@@ -476,29 +452,28 @@ package { 'yard':
 
 ???
 
-* Puppet needs to know the current state of a resource before code is applied
-* required to detect if changes are needed
-* prefetch needs to be implemented in the provider
-* check yard ensure, array
-
+* bolt takes user input and validates it against the schema in the metadata file
+* reuse existing puppet datatypes
 ---
 
 .left-column[
-## RAL
-### Find Resources
-### Modify Resources
+## PE
+## Bolt
+### Plans?!
 ]
 
 .right-column[
-* Can modify a resource instance
+* Bolt Plans are written in Puppet DSL
 
-* `puppet resource package htop ensure=absent`
+* Plans apply puppet code, execute Bolt or Puppet functions, start tasks or other plans
 
 ```puppet
-Notice: /Package[htop]/ensure: removed
-package { 'htop':
-  ensure   => 'absent',
-  provider => 'pacman',
+# @param message the string we want to paste to STDOUT
+plan test::foo (
+  String[1] $message = 'Hi CfgMgmtCamp!',
+) {
+  out::message($message)
+  run_task('puppet_agent::install', get_targets('all'))
 }
 ```
 ]
@@ -508,33 +483,43 @@ package { 'htop':
 
 ???
 
-* You can also pass the other parameters
+---
+
+.left-column[
+## PE
+## Bolt
+### Plugins?!
+]
+
+.right-column[
+* Bolt supports inventory- and transport plugins
+]
+
+<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
+.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
+
+???
+
+* Inventory describes the nodes I have and which transport protocol to use
+
+* the default inventory is just a yaml file
+
 ---
 
 count: false
 
 .left-column[
-## RAL
-### Find Resources
-### Modify Resources
+## PE
+## Bolt
+### Plugins?!
 ]
 
 .right-column[
-* Can modify a resource instance
+* Bolt supports inventory- and transport plugins
 
-* `puppet resource package htop ensure=absent`
+* Uses WinRM or SSH by default as transport protocol
 
-```puppet
-Notice: /Package[htop]/ensure: removed
-package { 'htop':
-  ensure   => 'absent',
-  provider => 'pacman',
-}
-```
-
-* Can modify a resource instance with debug output!
-
-* `puppet resource package htop ensure=absent --debug`
+  * Also native support for Docker, lxd, Jails, podman
 ]
 
 <a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
@@ -547,31 +532,19 @@ package { 'htop':
 count: false
 
 .left-column[
-## RAL
-### Find Resources
-### Modify Resources
+## PE
+## Bolt
+### Plugins?!
 ]
 
 .right-column[
-* Can modify a resource instance
+* Bolt supports inventory- and transport plugins
 
-* `puppet resource package htop ensure=absent`
+* Uses WinRM or SSH by default as transport protocol
 
-```puppet
-Notice: /Package[htop]/ensure: removed
-package { 'htop':
-  ensure   => 'absent',
-  provider => 'pacman',
-}
+  * Also native support for Docker, lxd, Jails, podman
 
-```
-* Can modify a resource instance with debug output!
-
-* `puppet resource package htop ensure=absent --debug`
-
-* Can simulate a change!
-
-* `puppet resource package htop ensure=absent --debug --noop`
+* Most used inventory plugin: PuppetDB
 ]
 
 <a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
@@ -579,88 +552,30 @@ package { 'htop':
 
 ???
 
-* Puppet CLI args like debug and noop can be passed to every `puppet resource package`
----
+The inventory will be generated based on PQL queries. For example: all nodes I have, or a specific operating system version
 
-.left-column[
-## RAL
-### Find Resources
-### Modify Resources
-### Purge Resources
-]
-.right-column[
-* [puppet.com/docs/puppet/8/type#resources](https://www.puppet.com/docs/puppet/8/type#resources)
-
-![img](resources.png)
-]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
-
-???
-
-* Who knows the resources resource type?
-
-* Who used it?
-
-* Who likes it?
-
-* I took the screenshots some time ago in case perforce fucks up their docs. well they did now
----
-
-.left-column[
-## RAL
-### Find Resources
-### Modify Resources
-### Purge Resources
-]
-.right-column[
-```puppet
-resources { 'User':
-  purge => true,
-}
-
-resources { 'Package':
-  purge => true,
-}
-
-```
-]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
-
-???
-
-* purge all users not managed by puppet
-* show resources.pp
-* Resource title has the resource capitalized
+Inventory plugins are just tasks! So you could use your favourite language to write a plugin to get nodes from the foreman api!
 
 ---
 
 count: false
 
 .left-column[
-## RAL
-### Find Resources
-### Modify Resources
-### Purge Resources
+## PE
+## Bolt
+### Plugins?!
 ]
+
 .right-column[
-```puppet
-resources { 'User':
-  purge => true,
-}
+* Bolt supports inventory- and transport plugins
 
-resources { 'Package':
-  purge => true,
-}
+* Uses WinRM or SSH by default as transport protocol
 
-resources { 'Service':
-  purge => true,
-  noop  => false,
-}
-```
+  * Also native support for Docker, lxd, Jails, podman
+
+* Most used inventory plugin: PuppetDB
+
+* There is also a Foreman inventory plugin! [forge.puppet.com/modules/foreman_inventory](https://forge.puppet.com/modules/andeman/foreman_inventory/tasks)
 ]
 
 <a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
@@ -668,1429 +583,241 @@ resources { 'Service':
 
 ???
 
-* noop is nice because it will inform you about unmanaged/unexpected resources
-* not so useful for packages or users
-* but what about database users
-* backends in your F5?
+A foreman plugin already exists
 ---
 
-.left-column[
-## RAL
-### Find Resources
-### Modify Resources
-### Purge Resources
-]
-.right-column[
-* [forge.puppet.com/crayfishx/purge](https://forge.puppet.com/modules/crayfishx/purge/readme)
+class: center, middle, inverseold
 
-![img](purge.png)
+# Bolt is the missing part in the ecosystem for imperative workflows and orchestration
 
-]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
-
----
-
-.left-column[
-## RAL
-### Find Resources
-### Modify Resources
-### Purge Resources
-]
-.right-column[
-![img](purge2.png)
-
-]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
-
----
-
-.left-column[
-## RAL
-### Find Resources
-### Modify Resources
-### Purge Resources
-]
-.right-column[
-
-![img](tidy.png)
-
-```puppet
-tidy { '/tmp':
-  age     => '1w',
-  recurse => 1,
-  matches => [ '[0-9]pub*.tmp', '*.temp', 'tmpfile?' ],
-}
-```
-]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
+## It combines scripts and Puppet code
 
 ???
 
-* uses the RAL to collect all files
-* applies the different matchers
-* purges all matching files
+* bolt has more features, please check them out
+* but this isn't a bolt talk, just an intro
+* bolt is just an open source tool with a CLI
 
-* sucks, because it adds one file resource for each file to the catalog
+* bolt is the ansible counterpart
 ---
 
 .left-column[
-## RAL
-### Find Resources
-### Modify Resources
-### Purge Resources
+## PE
+## Bolt
+## PE & Bolt
 ]
 .right-column[
+![firewall](orchestrator.drawio.svg)
 
-* Purging files and directories
+* Orchestrator can run Puppet tasks and Plans
 
-* [enterprisemodules.com/blog/2022/02/cleanup-temporary-files-in-puppet](https://www.enterprisemodules.com/blog/2022/02/cleanup-temporary-files-in-puppet/)
-
-![img](cleanup.png)
-
+* Basically an API & Web UI for bolt
 ]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
-
-???
-
-* works on dirs and and files
-* purges the files at the end of the catalog application, without any dependencies to file resources
-
-* best solution is a systemd timer or systemd tmpfs configuration
 ---
 
+count: false
+
 .left-column[
-## RAL
+## PE
+## Bolt
+## PE & Bolt
 ]
 .right-column[
-* Further documentation
+![firewall](orchestrator.drawio.svg)
 
-* https://petersouter.xyz/the-puppet-resource-abstraction-layer-ral-explained-part-1/
+* Orchestrator can run Puppet tasks and Plans
 
-* https://www.puppet.com/docs/puppet/7/man/resource
+* Basically an API & Web UI for bolt
+
+* Similar concept as the remote execution within Foreman!
 ]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
-
 ---
 class: center, middle, inverse
 
-# Puppet<br/>Faces
+# How do we<br/>migrate?
+
+---
+
+.left-column[
+## PE
+## Bolt
+## PE & Bolt
+## Marriage
+]
+.right-column[
+![firewall](pe2foreman1.drawio.svg)
+
+]
 
 ???
 
----
+* Current PE
+* different services on one box
 
+---
 .left-column[
-## Faces
+## PE
+## Bolt
+## PE & Bolt
+## Marriage
 ]
 .right-column[
+![firewall](pe2foreman3.drawio.svg)
 
-* https://puppetcommunity.slack.com/archives/C0W1X7ZAL/p1705520404613479?thread_ts=1705511900.536469&cid=C0W1X7ZAL
+* Configure foreman-proxy on PE infra
 
-![img](2024-01-17_22-17.png)
+  * PE uses `pe-puppet` user, not `puppet`, supported by [theforeman/foreman_proxy 28.0.0](https://github.com/theforeman/puppet-foreman_proxy/commit/6645a728185d19d2226fbc7c4530d4341727365e)
 
+  * PE is still the ENC
+
+  * Foremans node.rb pushes facts to foreman, PE support in [theforeman/puppserver_foreman 4.1.0](https://github.com/theforeman/puppet-puppetserver_foreman/commit/2f6c193f8e6579dce76c90a6ff289a632cbd9039)
 ]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
 
 ???
 
-* An awesome way to extend the Puppet CLI
-* Allows you to access puppet as a lib
-
+The foreman module will detect if its running on a PE node and use the correct user
 ---
 
 .left-column[
-## Faces
+## PE
+## Bolt
+## PE & Bolt
+## Marriage
 ]
-
 .right-column[
-* Faces were "deprecated" but won't be removed: https://www.puppet.com/docs/puppet/5.5/deprecated_api.html
-
-* Kelsey Hightower explaining faces in 2011: https://www.youtube.com/watch?v=WUlYEJ-fpfU
-
-* Faces are used heavily within Puppet: https://github.com/puppetlabs/puppet/tree/main/lib/puppet/face
-]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
-
-???
-
----
-
-count: false
-
-.left-column[
-## Faces
-]
-
-.right-column[
-* Faces were "deprecated" but won't be removed: https://www.puppet.com/docs/puppet/5.5/deprecated_api.html
-
-* Kelsey Hightower explaining faces in 2011: https://www.youtube.com/watch?v=WUlYEJ-fpfU
-
-* Faces are used heavily within Puppet: https://github.com/puppetlabs/puppet/tree/main/lib/puppet/face
-
-* "Puppet Applications" are the successor for Faces
-
-* [github.com/puppetlabs/puppet/blob/main/lib/puppet/application.rb](https://github.com/puppetlabs/puppet/blob/49d74c94c848d4d4f4d022b58ff8135b2f46e7b0/lib/puppet/application.rb#L10)
-]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
-
-???
-
----
-
-.left-column[
-## Faces
-### config
-]
-
-.right-column[
-* `puppet config print`
-
-* `puppet config print certname`
-
-* `puppet config print certname --section`
-
-* `puppet config set 'option' 'value' --section 'section'`
-
-* Valid sections: main, user, agent, server/master
-]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
-
-???
-
-* config face is builtin
-* can read and write from puppet.conf
-* can disable defaults from the code that aren't in puppet.conf
-* identifies path to puppet.conf on its own
-
-
----
-
-.left-column[
-## Faces
-### config
-### catalog diff
-]
-
-.right-column[
-* [github.com/voxpupuli/puppet-catalog_diff](https://github.com/voxpupuli/puppet-catalog_diff/tree/master?tab=readme-ov-file#overview)
-
-* The tool can automatically compile the catalogs for both your new and older servers/environments. It can ask the master to use PuppetDB to compile the catalog for the last known environment with the last known facts. It can then validate against PuppetDB that the node is still active. This filtered list should contain only machines that have not been decommissioned in PuppetDB (important as compiling their catalogs would also reactive them and their exports otherwise).
-]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
-
-???
-
-* `catalog` face exists in core, `catalog diff` is custom, maintained by Vox Pupuli
-
----
-
-.left-column[
-## Faces
-### config
-### catalog diff
-]
-
-.right-column[
-* `puppet catalog diff puppet.example.com/production puppet.example.com/staging --filter_old_env`
-
-* `puppet catalog diff /foo/old/node1.example.com.json /foo/new/node1.example.com.json`
-
-* [voxpupuli.org/puppet-catalog-diff-viewer](https://voxpupuli.org/puppet-catalog-diff-viewer/)
-]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
-
-???
-
-* diff catalogs from PuppetDB or compile new ones
-* diff between environments
-* diff between different Puppet infrastructures
-* Visualize reports
-* deserves its own talk, Raphael did some in the past, linked in the README.md
-
----
-
-.left-column[
-## Faces
-### config
-### catalog diff
-]
-
-.right-column[
-![img](diff.png)
-]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-
----
-
-.left-column[
-## Faces
-### config
-### catalog diff
-### node exports
-]
-
-.right-column[
-
-* provide a list of exported resources in PuppetDB
-
-* `watch 'puppet node exports'`
-
-* [forge.puppet.com/zack/exports](https://forge.puppet.com/modules/zack/exports/readme#example-usage)
-
-]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
-
----
-
-count: false
-
-.left-column[
-## Faces
-### config
-### catalog diff
-### node exports
-]
-
-.right-column[
-
-* provide a list of exported resources in PuppetDB
-
-* `watch 'puppet node exports'`
-
-* [forge.puppet.com/zack/exports](https://forge.puppet.com/modules/zack/exports/readme#example-usage)
-
-* Lists all exported resources
-
-* Can be filtered for resource types (for example File)
-]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
-
----
-
-count: false
-
-.left-column[
-## Faces
-### config
-### catalog diff
-### node exports
-]
-
-.right-column[
-
-* provide a list of exported resources in PuppetDB
-
-* `watch 'puppet node exports'`
-
-* [forge.puppet.com/zack/exports](https://forge.puppet.com/modules/zack/exports/readme#example-usage)
-
-* Lists all exported resources
-
-* Can be filtered for resource types (for example File)
-
-* Doesn't work properly with Puppet 8 :sadface:
-
-![img](exports.png)
-]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
-
-???
-
-It uses a deprecated HTTP client
----
-
-class: center, middle, inverse
-
-# Puppet<br/>CLI
-
-???
-
----
-
-.left-column[
-## CLI
-]
-
-.right-column[
-
-* `puppet agent -t`
-
-]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
-
----
-
-count:false
-
-.left-column[
-## CLI
-]
-
-.right-column[
-
-* `puppet agent -t`
-
-* `puppet agent --test`
-]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
-
-???
-
-those are equal
-
----
-
-count:false
-
-.left-column[
-## CLI
-]
-
-.right-column[
-
-* `puppet agent -t`
-
-* `puppet agent --test`
-
-* `puppet agent --verbose --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay --show_diff`
-]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
-
----
-
-count: false
-
-.left-column[
-## CLI
-]
-
-.right-column[
-
-* `puppet agent -t`
-
-* `puppet agent --test`
-
-* `puppet agent --verbose --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay --show_diff`
-
-* Who knows more CLI invocations?
-
-]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
-
-???
-
----
-
-count: false
-
-.left-column[
-## CLI
-]
-
-.right-column[
-
-* `puppet agent -t`
-
-* `puppet agent --test`
-
-* `puppet agent --verbose --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay --show_diff`
-
-* Who knows more CLI invocations?
-
-* Some Options are only available on the CLI: `puppet agent --help`
-
-* Every config option can be set and overwritten on CLI: https://www.puppet.com/docs/puppet/8/configuration.html
-
-* `puppet agent -t --no-noop`
-
-]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
-
-???
-
-* puppet.conf can be overwritten on CLI
-* See --no-splay above to disable options
-
-* Add noop=true to puppet.conf
-* when you want to apply changes, run with --no-noop
-
----
-
-.left-column[
-## CLI
-### trace
-]
-
-.right-column[
-* `--trace` is a common option in the Ruby ecosystem
-
-* available in puppet faces as well
-
-![img](trace.png)
-
-]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
-
-???
-
-* Remember our error from earlier? It had no line/file information
-* now it has, exports.rb line 63
-
----
-
-.left-column[
-## CLI
-### trace
-### debug
-]
-
-.right-column[
-
-* `puppet agent -t --debug`
-
-* Prints all HTTP calls to puppetserver
-
-* Lists all resources and if they are already in the desired state
-]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
-
-???
-
----
-
-count:false
-
-.left-column[
-## CLI
-### trace
-### debug
-]
-
-.right-column[
-
-* `puppet agent -t --debug`
-
-* Prints all HTTP calls to puppetserver
-
-* Lists all resources and if they are already in the desired state
-
-* prints all debug messages
-
-* Facter: `Facter.debug('my debug text')`
-
-* Puppet Types/Provider: `Puppet.debug('my other debug text')`
-]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
-
-???
-
-* Now we can extend our code with many debug messages
-* but what if we need to dig deep
----
-
-.left-column[
-## CLI
-### trace
-### debug
-### http_debug
-]
-
-.right-column[
-![img](deeper.jpg)
-]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
-
----
-
-.left-column[
-## CLI
-### trace
-### debug
-### http_debug
-]
-
-.right-column[
-* `puppet agent -t --http_debug`
-
-* Dumps every HTTP Payload and Headers from/to Puppetserver
-]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
-
----
-
-count: false
-
-.left-column[
-## CLI
-### trace
-### debug
-### http_debug
-]
-
-.right-column[
-* `puppet agent -t --http_debug`
-
-* Dumps every HTTP Payload and Headers from/to Puppetserver
-
-* As base64
-]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
-
----
-
-.left-column[
-## CLI
-### trace
-### debug
-### http_debug
-]
-
-.right-column[
-![img](http.png)
-]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
----
-
-.left-column[
-## CLI
-### trace
-### debug
-### http_debug
-### evaltrace
-]
-
-.right-column[
-* `puppet agent -t --evaltrace`
-
-* prints all resources and their evaluation time
-
-![img](eval.png)
-]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
-
-???
-
-* Who knows that option?
-* naming things is hard. evaltrace written together. http_debug uses an underscore
----
-
-.left-column[
-## CLI
-### trace
-### debug
-### http_debug
-### evaltrace
-]
-
-.right-column[
-* `puppet agent -t --trace --evaltrace --debug --http_debug`
-
-* All options can be combined
-
-]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
-
----
-
-count: false
-
-.left-column[
-## CLI
-### trace
-### debug
-### http_debug
-### evaltrace
-]
-
-.right-column[
-* `puppet agent -t --trace --evaltrace --debug --http_debug`
-
-* All options can be combined
-
-* You will need a very big screen!
-]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
-
-???
-
-* This is a lot of output
-
----
-
-.left-column[
-## CLI
-### trace
-### debug
-### http_debug
-### evaltrace
-### timing
-]
-
-.right-column[
-* `puppet facts show` # show all facts
-]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
-
----
-
-count: false
-
-.left-column[
-## CLI
-### trace
-### debug
-### http_debug
-### evaltrace
-### timing
-]
-
-.right-column[
-* `puppet facts show` # show all facts
-
-* `puppet facts show $fact` # show a single fact named fact
-]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
-
----
-
-count: false
-
-.left-column[
-## CLI
-### trace
-### debug
-### http_debug
-### evaltrace
-### timing
-]
-
-.right-column[
-* `puppet facts show` # show all facts
-
-* `puppet facts show $fact` # show a single fact named fact
-
-* `puppet facts show --timing` # timing per fact resolution
-]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
-
----
-
-.left-column[
-## CLI
-### trace
-### debug
-### http_debug
-### evaltrace
-### timing
-]
-
-.right-column[
-![img](facter.png)
-]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
-
----
-class: center, middle, inverse
-
-# Design Pattern<br/>and Hacks
-
-???
-
----
-
-.left-column[
-## Hacks & Patterns
-### LLDP
-]
-
-.right-column[
-* LLDP - Link Layer Distribution Protocol
-
-* IEEE-802.1AB standard
-
-* exchange information between direct layer 2 peers
-
-* Common protocol for Routers, Switches *and servers*
-
-]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
-
----
-
-count: false
-
-.left-column[
-## Hacks & Patterns
-### LLDP
-]
-
-.right-column[
-* LLDP - Link Layer Distribution Protocol
-
-* IEEE-802.1AB standard
-
-* exchange information between direct layer 2 peers
-
-* Common protocol for Routers, Switches *and servers*
-
-* Linux: [github.com/lldpd/lldpd](https://github.com/lldpd/lldpd)
-
-* Puppet Module: [forge.puppet.com/puppet/lldpd](https://forge.puppet.com/modules/puppet/lldpd/readme)
-]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
-
----
-
-.left-column[
-## Hacks & Patterns
-### LLDP
-]
-
-.right-column[
-![img](lldpd.png)
-]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
-
-
-???
-
-* VMs/Hypervisor run LLDP
-* VM knows on which HV it is running
-* Hypervisor knows to wich switches it's connected
-* Switches know which hypervisors and routers are connected
-* All those information can be stored to PuppetDB
-* the puppet module has a fact that exports the data
-* you can query PuppetDB to find out which devices are connected to each other and plot them live!
-* I would love to throw this into a graph database at some point
----
-
-.left-column[
-## Hacks & Patterns
-### LLDP
-### Puppet CA
-]
-
-.right-column[
-* [github.com/voxpupuli/puppet-puppet_ca_utils](https://github.com/voxpupuli/puppet-puppet_ca_utils)
-
-* Can crosssign Puppet CAs
-]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
-
-???
-
-* Helpful if you've a new and old Infra and want to migrate agents
-* You can configure if Agents should be able to talk to both CAs or Agent from A only to A and B but B not do A
-
----
-
-count: false
-
-.left-column[
-## Hacks & Patterns
-### LLDP
-### Puppet CA
-]
-
-.right-column[
-* [github.com/voxpupuli/puppet-puppet_ca_utils](https://github.com/voxpupuli/puppet-puppet_ca_utils)
-
-* Can crosssign Puppet CAs
-
-* [github.com/voxpupuli/puppet-puppet_certificate](https://github.com/voxpupuli/puppet-puppet_certificate)
-
-* Allow Agents to renew their own certificate
-
-* Update CSR/SAN attributes
 
 ```puppet
-file { '/etc/puppetlabs/puppet/csr_attributes.yaml':
-  ensure  => file,
-  owner   => 'root',
-  group   => 'root',
-  mode    => '0440',
-  content => epp('example/csr_attributes.yaml.epp'),
-}
-
-~> puppet_certificate { $certname:
-  ensure      => present,
-  waitforcert => 60,
-  onrefresh   => regenerate,
-}
-```
-]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
-
-???
-
----
-
-count: false
-
-.left-column[
-## Hacks & Patterns
-### LLDP
-### Puppet CA
-]
-
-.right-column[
-* [github.com/voxpupuli/puppet-puppet_ca_utils](https://github.com/voxpupuli/puppet-puppet_ca_utils)
-
-* Can crosssign Puppet CAs
-
-* [github.com/voxpupuli/puppet-puppet_certificate](https://github.com/voxpupuli/puppet-puppet_certificate)
-
-* Allow Agents to renew their own certificate
-
-* Update CSR/SAN attributes
-
-```puppet
-file { '/etc/puppetlabs/puppet/csr_attributes.yaml':
-  ensure  => file,
-  owner   => 'root',
-  group   => 'root',
-  mode    => '0440',
-  content => epp('example/csr_attributes.yaml.epp'),
-}
-
-~> puppet_certificate { $certname:
-  ensure      => present,
-  waitforcert => 60,
-  onrefresh   => regenerate,
+# https://github.com/puppetlabs/puppet-enterprise_issues/issues/55
+ini_setting { 'enable reporting into Foreman':
+  ensure  => 'present',
+  path    => '/etc/puppetlabs/puppet/puppet.conf',
+  setting => 'reports',
+  value   => 'puppetdb,foreman',
+  section => 'master',
+  notify  => Service['pe-puppetserver'],
 }
 ```
 
-* Puppet 8.2 supports auto cert renewal: [puppet.com/docs/puppet/8/release_notes](https://www.puppet.com/docs/puppet/8/release_notes_puppet#release_notes_puppet_x-8-2-0)
+* we need to tell PE to use the foreman report processor
+
+* Perforce renamed master section to server years ago
+
+* except for PE, where I still need to set the master section
 ]
 
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
+???
+
+You can use the server section, but it will always create the master section as well
+---
+
+.left-column[
+## PE
+## Bolt
+## PE & Bolt
+## Marriage
+]
+.right-column[
+
+* PE now speaks to foreman
+
+* We can add openvox-server on additional machines
+
+* Move agents from PE puppetserver to openvox-server
+
+* Perforce legacy open source agents / PE agents / OpenVox Agents are all compatible with PE puppetserver / legacy opensource puppetserver / openvox-server
+]
 
 ???
 
 ---
 
 .left-column[
-## Hacks & Patterns
-### LLDP
-### Puppet CA
+## PE
+## Bolt
+## PE & Bolt
+## Marriage
 ]
-
-.right-column[
-* Use PuppetCA for personal certificates
-
-* Use personal certificates to authenticate to local services
-
-* `puppet ssl bootstrap --certname "$(hostname -f)-${USER}"`
-
-![img](ca.png)
-]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
-
-???
-
-* Nginx for example can validate client TLS certificates
-
-* admins can use that for internal sites
----
-
-.left-column[
-## Hacks & Patterns
-### LLDP
-### Puppet CA
-]
-
-.right-column[
-* [github.com/m0dular/ca_extend](https://github.com/m0dular/ca_extend?tab=readme-ov-file#ca_extend)
-
-* Extend a Open Source CA
-]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
-
-???
-
----
-
-count: false
-
-.left-column[
-## Hacks & Patterns
-### LLDP
-### Puppet CA
-]
-
-.right-column[
-* [github.com/m0dular/ca_extend](https://github.com/m0dular/ca_extend?tab=readme-ov-file#ca_extend)
-
-* Extend a Open Source CA
-
-* [github.com/puppetlabs/ca_extend](https://github.com/puppetlabs/ca_extend?tab=readme-ov-file#ca_extend)
-
-* Extend a PE CA
-]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
-
-???
-
----
-
-count: false
-
-.left-column[
-## Hacks & Patterns
-### LLDP
-### Puppet CA
-]
-
-.right-column[
-* [github.com/m0dular/ca_extend](https://github.com/m0dular/ca_extend?tab=readme-ov-file#ca_extend)
-
-* Extend a Open Source CA
-
-* [github.com/puppetlabs/ca_extend](https://github.com/puppetlabs/ca_extend?tab=readme-ov-file#ca_extend)
-
-* Extend a PE CA
-
-* [My Shell script to extend a CA](https://gist.github.com/bastelfreak/034fca2e7719351fe42c28e7844dace5)
-]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
-
-???
----
-
-.left-column[
-## Hacks & Patterns
-### LLDP
-### Puppet CA
-### Clusterfoo
-]
-
 .right-column[
 
-* Use PuppetDB to dynamically build your clusters
+* You can already manage OpenVox with the foreman puppet modules!
 
-```puppet
-# Get FQDNs for all cluster peers
-$query = "inventory[certname] {
-  trusted.extensions.pp_role = 'consul' and trusted.extensions.pp_region = 'eu-01'
-}"
-$nodes = puppetdb_query($query).map |$value| { $value["certname"] }
-```
-
-]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
-
----
-
-count: false
-
-.left-column[
-## Hacks & Patterns
-### LLDP
-### Puppet CA
-### Clusterfoo
-]
-
-.right-column[
-
-* Use PuppetDB to dynamically build your clusters
-
-```puppet
-# Get FQDNs for all cluster peers
-$query = "inventory[certname] {
-  trusted.extensions.pp_role = 'consul' and trusted.extensions.pp_region = 'eu-01'
-}"
-$nodes = puppetdb_query($query).map |$value| { $value["certname"] }
+```yaml
+puppet::client_package: openvox-agent
+puppet::server::package: openvox-server
+puppetdb::puppetdb_package: openvoxdb
+puppetdb::master::config::terminus_package: openvoxdb-termini
+foreman::providers::oauth: false
 ```
 
 ```puppet
-@@sshkey{$trusted['certname']:
-  host_aliases => [$facts['ipaddress6'], $facts['ipaddress']],
-  type         => "ssh-${type}",
-  key          => $facts['ssh'][$type]['key'],
-  # defaults to /etc/ssh/ so all users can use it
-  #target       => '/root/.ssh/known_hosts',
-  tag          => $trusted['extensions']['pp_role'],
-}
-## import host key
-Sshkey <<| tag == $trusted['extensions']['pp_role'] and title != $trusted['certname'] |>>
-```
-]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
-
-???
-
-* Often systems want a list of all backend systems, consul for example
-
-* Works of course for IPs and ssh_authorized_keys and others as well
----
-.left-column[
-## Hacks & Patterns
-### LLDP
-### Puppet CA
-### Clusterfoo
-### Updating PuppetDB
-]
-
-.right-column[
-
-* https://www.puppet.com/docs/puppet/7/configuration#resubmit-facts
-
-* `puppet config set resubmit_facts true`
-
-* `puppet agent -t --resubmit_facts`
-
-* Evaluate all facts *after* catalog application and send them to PuppetDB
-]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
-
-???
-
-* by default, facts are only gathered and stored before the catalot is applied
-
----
-.left-column[
-## Hacks & Patterns
-### LLDP
-### Puppet CA
-### Clusterfoo
-### Updating PuppetDB
-### puppetmoduleinfo
-]
-
-.right-column[
-
-* [www.puppetmodule.info/modules](https://www.puppetmodule.info/modules)
-
-* Similar to http://rubydoc.info/, puppetmodule.info renders puppet modules and puppet-strings annotations
-
-* static site with module documentation
-
-]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
-
-???
-
-
----
-
-.left-column[
-## Hacks & Patterns
-### LLDP
-### Puppet CA
-### Clusterfoo
-### Updating PuppetDB
-### puppetmoduleinfo
-### healthchecks
-]
-
-.right-column[
-
-* [forge.puppet.com/puppet/healthcheck](https://forge.puppet.com/modules/puppet/healthcheck)
-
-* Types that block catalog application until a TCP or HTTP(S) connection is successful
-
-```puppet
-tcp_conn_validator { 'foo-machine ssh service' :
-  host => '192.168.0.42',
-  port   => 22,
+# on the foreman node
+package { 'oauth':
+  ensure   => 'installed',
+  provider => 'puppet_gem',
 }
 ```
 
-```puppet
-http_conn_validator { 'foo-machine home' :
-  host    => '127.0.0.1',
-  port    => 8081,
-  use_ssl => true,
-}
-```
+* Foremans puppet-agent-oauth rpm/deb package depends on `puppet-agent`, not all OpenVox packages have `provides puppet-agent` in their metadata yet!
 ]
 
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
-
 ???
-
 
 ---
 
 .left-column[
-## Hacks & Patterns
-### LLDP
-### Puppet CA
-### Clusterfoo
-### Updating PuppetDB
-### puppetmoduleinfo
-### healthchecks
-### features
+## PE
+## Bolt
+## PE & Bolt
+## Marriage
 ]
-
 .right-column[
-* Facts can be confined to facts, a ruby code block, or a feature
 
-```ruby
-# lib/facter/cem_inetd.rb
-Facter.add(:cem_inetd) do
-  confine kernel: 'Linux'
-  ...
-  setcode do
-    ...
-  end
-end
-```
+* For years, PE customers just wanted to run Foreman + Running Bolt tasks/plan via API
+
+* Perforce ignored it: https://github.com/puppetlabs/puppet-enterprise_issues/issues/28
+
 ]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
 
 ???
 
-
----
-
-.left-column[
-## Hacks & Patterns
-### LLDP
-### Puppet CA
-### Clusterfoo
-### Updating PuppetDB
-### puppetmoduleinfo
-### healthchecks
-### features
-]
-
-.right-column[
-* Facts can be confined to facts, a ruby code block, or a feature
-
-```ruby
-# lib/puppet/feature/cem_inetd.rb
-require 'puppet/util/feature'
-
-Puppet.features.add(:cem_inetd) do
-  inetd = `sh -c 'command -v inetd'`.strip
-  xinetd = `sh -c 'command -v xinetd'`.strip
-  inetd.empty? && xinetd.empty? ? false : true
-end
-```
-]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
-
-???
-
-
----
-
-.left-column[
-## Hacks & Patterns
-### LLDP
-### Puppet CA
-### Clusterfoo
-### Updating PuppetDB
-### puppetmoduleinfo
-### healthchecks
-### features
-]
-
-.right-column[
-* Facts can be confined to facts, a ruby code block, or a feature
-
-```ruby
-# lib/puppet/feature/awesome.rb
-require 'puppet/util/feature'
-
-Puppet.features.add(:awesome, libs: ['sinatra'])
-```
-]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
-
-???
-
-
----
-
-.left-column[
-## Hacks & Patterns
-### LLDP
-### Puppet CA
-### Clusterfoo
-### Updating PuppetDB
-### puppetmoduleinfo
-### healthchecks
-### features
-]
-
-.right-column[
-* Facts can be confined to facts, a ruby code block, or a feature
-
-```ruby
-# lib/facter/cem_inetd.rb
-Facter.add(:cem_inetd) do
-  confine kernel: 'Linux'
-  confine { Puppet.features.cem_inetd? }
-  confine { Puppet.features.awesome? }
-  setcode do
-    ...
-  end
-end
-```
-]
-
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
-
-???
-
-
+Customers wanted that Perforce writes a plugin for Foreman, to speak to their orchestrator
 ---
 
 count: false
 
 .left-column[
-## Hacks & Patterns
-### LLDP
-### Puppet CA
-### Clusterfoo
-### Updating PuppetDB
-### puppetmoduleinfo
-### healthchecks
-### features
+## PE
+## Bolt
+## PE & Bolt
+## Marriage
 ]
-
 .right-column[
-* Facts can be confined to facts, a ruby code block, or a feature
 
-```ruby
-# lib/facter/cem_inetd.rb
-Facter.add(:cem_inetd) do
-  confine kernel: 'Linux'
-  confine { Puppet.features.cem_inetd? }
-  confine { Puppet.features.awesome? }
-  setcode do
-    ...
-  end
-end
-```
+* For years, PE customers just wanted to run Foreman + Running Bolt tasks/plan via API
 
-* Features can be referenced in provider as well
-* https://dev.to/puppet/features-the-forgotten-feature-of-puppet-12p2
-* [Feature in puppet/zabbix module](https://github.com/voxpupuli/puppet-zabbix/blob/master/lib/puppet/feature/zabbixapi.rb)
-* [Using the feature in puppet/zabbix](https://github.com/voxpupuli/puppet-zabbix/blob/master/lib/puppet/provider/zabbix_application/ruby.rb#L6)
+* Perforce ignored it: https://github.com/puppetlabs/puppet-enterprise_issues/issues/28
+
+* We started a little side project https://community.theforeman.org/t/rfc-integrating-bolt-into-remote-execution/39901
 ]
 
-<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
-.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
-
-???
-
-
----
-
-
-class: center, middle, inverse
-
-# Conclusion<br/><br/>
-
 ???
 
 ---
+
+.left-column[
+## PE
+## Bolt
+## PE & Bolt
+## Marriage
+]
+.right-column[
+.smallimg[![marriage](marriage.drawio.svg)]
+]
+
+???
+
+---
+
 .left-column[
 ## Conclusion
 ]
