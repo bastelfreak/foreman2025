@@ -218,6 +218,9 @@
       .right-column .verysmallimg img {
         width: 51%;
       }
+      .right-column .evensmallerimg img {
+        width: 44%;
+      }
       .right-column .nowidth img {
         width: auto;
       }
@@ -276,11 +279,71 @@ class: center, middle, inverse
 * who has seen this picture before because I reviewed/merged your pull request?
 
 ---
+class: center, middle, inverse
 
+# Vox Pupuli &<br/> OpenVoxProject
+
+???
+
+---
 background-image: url(contributors.svg)
 background-size: contain
 
 ## Vox Pupuli Community growth over time
+
+???
+
+Vox Pupuli maintain all the ecosystem tooling and modules
+
+Foreman uses a lot of them and contributes to them
+---
+
+.left-column[
+## OpenVoxProject
+]
+
+.right-column[
+* OpenVoxProject is a new GitHub organisation
+
+* Same people as Vox Pupuli
+
+* Split orgs to make permission management easier
+
+* Makes it easier to move one or the other to the Linux Foundation or similar, if we ever want to do that
+
+]
+
+<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
+.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
+
+???
+
+---
+
+count: false
+
+.left-column[
+## OpenVoxProject
+]
+
+.right-column[
+* OpenVoxProject is a new GitHub organisation
+
+* Same people as Vox Pupuli
+
+* Split orgs to make permission management easier
+
+* Makes it easier to move one or the other to the Linux Foundation or similar, if we ever want to do that
+
+* We continue the open source development of Bolt, Facter, Puppet Agent/DB/Server
+
+  * Perforce stopped their work on it last November and continues in a private & commercial fork
+]
+
+<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
+.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
+
+???
 
 ---
 class: center, middle, inverse
@@ -473,7 +536,7 @@ git branch -m "$PT_control_repo_branch" production
 ```puppet
 # @param message the string we want to paste to STDOUT
 plan test::foo (
-  String[1] $message = 'Hi CfgMgmtCamp!',
+  String[1] $message = 'Hi VoxConf!',
 ) {
   out::message($message)
   run_task('puppet_agent::install', get_targets('all'))
@@ -613,9 +676,12 @@ class: center, middle, inverseold
 ![firewall](orchestrator.drawio.svg)
 
 * Orchestrator can run Puppet tasks and Plans
-
 * Basically an API & Web UI for bolt
 ]
+
+<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
+.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
+
 ---
 
 count: false
@@ -629,11 +695,13 @@ count: false
 ![firewall](orchestrator.drawio.svg)
 
 * Orchestrator can run Puppet tasks and Plans
-
 * Basically an API & Web UI for bolt
-
 * Similar concept as the remote execution within Foreman!
 ]
+
+<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
+.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
+
 ---
 class: center, middle, inverse
 
@@ -651,6 +719,8 @@ class: center, middle, inverse
 ![firewall](pe2foreman1.drawio.svg)
 
 ]
+<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
+.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
 
 ???
 
@@ -668,13 +738,13 @@ class: center, middle, inverse
 ![firewall](pe2foreman3.drawio.svg)
 
 * Configure foreman-proxy on PE infra
-
-  * PE uses `pe-puppet` user, not `puppet`, supported by [theforeman/foreman_proxy 28.0.0](https://github.com/theforeman/puppet-foreman_proxy/commit/6645a728185d19d2226fbc7c4530d4341727365e)
-
-  * PE is still the ENC
-
-  * Foremans node.rb pushes facts to foreman, PE support in [theforeman/puppserver_foreman 4.1.0](https://github.com/theforeman/puppet-puppetserver_foreman/commit/2f6c193f8e6579dce76c90a6ff289a632cbd9039)
+* PE uses `pe-puppet` user, not `puppet`, supported by [theforeman/foreman_proxy 28.0.0](https://github.com/theforeman/puppet-foreman_proxy/commit/6645a728185d19d2226fbc7c4530d4341727365e)
+* PE is still the ENC
+* Foremans node.rb pushes facts to foreman, PE support in [theforeman/puppserver_foreman 4.1.0](https://github.com/theforeman/puppet-puppetserver_foreman/commit/2f6c193f8e6579dce76c90a6ff289a632cbd9039)
 ]
+
+<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
+.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
 
 ???
 
@@ -705,6 +775,8 @@ ini_setting { 'enable reporting into Foreman':
 
 * Perforce renamed master section to server years ago
 ]
+<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
+.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
 
 ???
 
@@ -741,6 +813,8 @@ ini_setting { 'enable reporting into Foreman':
 
 * except for PE, where I still need to set the master section
 ]
+<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
+.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
 
 ???
 
@@ -758,6 +832,10 @@ You can use the server section, but it will always create the master section as 
 .smallimg[![marriage](NKARB.jpg)]
 
 ]
+
+<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
+.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
+
 ---
 
 .left-column[
@@ -788,6 +866,9 @@ ini_setting { 'enable reporting into Foreman':
 
 * Why does that even work?
 ]
+
+<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
+.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
 
 ???
 
@@ -826,6 +907,9 @@ ini_setting { 'enable reporting into Foreman':
 * PE doesn't puppet.conf out of the box on puppetservers
 ]
 
+<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
+.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
+
 ???
 
 ---
@@ -841,6 +925,9 @@ ini_setting { 'enable reporting into Foreman':
 .verysmallimg[![marriage](a8o6636_460s.jpg)]
 
 ]
+
+<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
+
 ---
 .left-column[
 ## PE
@@ -858,6 +945,8 @@ ini_setting { 'enable reporting into Foreman':
 
 * Perforce legacy open source agents / PE agents / OpenVox Agents are all compatible with PE puppetserver / legacy opensource puppetserver / openvox-server
 ]
+<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
+.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
 
 ???
 
@@ -892,6 +981,9 @@ package { 'oauth':
 * Foremans puppet-agent-oauth rpm/deb package depends on `puppet-agent`, not all OpenVox packages have `provides puppet-agent` in their metadata yet!
 ]
 
+<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
+.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
+
 ???
 
 ---
@@ -909,6 +1001,9 @@ package { 'oauth':
 * Perforce ignored it: https://github.com/puppetlabs/puppet-enterprise_issues/issues/28
 
 ]
+
+<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
+.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
 
 ???
 
@@ -932,6 +1027,9 @@ count: false
 * We started a little side project https://community.theforeman.org/t/rfc-integrating-bolt-into-remote-execution/39901
 ]
 
+<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
+.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
+
 ???
 
 ---
@@ -945,6 +1043,7 @@ count: false
 .right-column[
 .smallimg[![marriage](marriage.drawio.svg)]
 ]
+<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
 
 ???
 
@@ -960,11 +1059,7 @@ background-image: url(awesome.png)
 
 .right-column[
 
-* Puppet is very flexible and suiteable for different usecases
-
-* There are many hidden gems and extensions available
-
-* More docs from Puppet/Perforce for edgecases & advanced users would be awesome!
+* You can already run Foreman with OpenVox Agent/DB/Server packages
 
 ]
 
@@ -973,7 +1068,6 @@ background-image: url(awesome.png)
 
 ???
 
-* Need help with opensourcing your puppet modules or rubygems or CI setup? Let us know
 ---
 
 count: false
@@ -983,21 +1077,149 @@ count: false
 ]
 
 .right-column[
-* Puppet is very flexible and suiteable for different usecases
 
-* There are many hidden gems and extensions available
+* You can already run Foreman with OpenVox Agent/DB/Server packages
 
-* More docs from Puppet/Perforce for edgecases & advanced users would be awesome!
-
-* For feedback: `bastelfreak` on <a href="https://slack.puppet.com/">slack.puppet.com</a>/Libera.Chat IRC or [tim@bastelfreak.de](mailto:tim@bastelfreak.de)
-
-* This talk and previous ones: <a href='https://github.com/bastelfreak/talks'>github.com/bastelfreak/talks</a>
-
-### Thanks for your attention!
+* You can already use OpenVox Agents with Puppet Enterprise
 ]
 
 <a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
 .footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
+
+???
+
+* There are bolt plans available to purge the puppet agent and reinstall the openvox agent!
+---
+
+count: false
+
+.left-column[
+## Conclusion
+]
+
+.right-column[
+
+* You can already run Foreman with OpenVox Agent/DB/Server packages
+
+* You can already use OpenVox Agents with Puppet Enterprise
+
+* You can already connect your Puppet Enterprise to Foreman
+]
+
+<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
+.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
+
+???
+
+---
+
+count: false
+
+.left-column[
+## Conclusion
+]
+
+.right-column[
+
+* You can already run Foreman with OpenVox Agent/DB/Server packages
+
+* You can already use OpenVox Agents with Puppet Enterprise
+
+* You can already connect your Puppet Enterprise to Foreman
+
+* Soon we will have Bolt Tasks/Plans integration in Foreman
+]
+
+<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
+.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
+
+???
+
+---
+
+count: false
+
+.left-column[
+## Conclusion
+]
+
+.right-column[
+
+* You can already run Foreman with OpenVox Agent/DB/Server packages
+
+* You can already use OpenVox Agents with Puppet Enterprise
+
+* You can already connect your Puppet Enterprise to Foreman
+
+* Soon we will have Bolt Tasks/Plans integration in Foreman
+
+* With Choria, we have a scaleable open source broker Setup to replace the pxp-agent and Orchestrator
+]
+
+<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
+.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
+
+???
+
+---
+
+count: false
+
+.left-column[
+## Conclusion
+]
+
+.right-column[
+
+* You can already run Foreman with OpenVox Agent/DB/Server packages
+
+* You can already use OpenVox Agents with Puppet Enterprise
+
+* You can already connect your Puppet Enterprise to Foreman
+
+* Soon we will have Bolt Tasks/Plans integration in Foreman
+
+* With Choria, we have a scaleable open source broker Setup to replace the pxp-agent and Orchestrator
+
+* Different companies offer consulting & support & training for Foreman & OpenVox
+]
+
+<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
+.footnote[[bastelfreak](https://github.com/bastelfreak) for [Vox Pupuli](https://voxpupuli.org)]
+
+???
+
+---
+
+class: center, middle, inverse
+
+# There is no reason to run<br/> Puppet Enterprise anymore
+
+???
+
+---
+
+
+
+count: false
+
+.left-column[
+## Conclusion
+]
+
+.right-column[
+* All memes are a homage to the awesome WAT talk, [destroyallsoftware.com/talks/wat](https://www.destroyallsoftware.com/talks/wat)
+
+* For feedback: `bastelfreak` on Libera.Chat IRC or [tim@bastelfreak.de](mailto:tim@bastelfreak.de)
+
+* This talk and previous ones: <a href='https://github.com/bastelfreak/talks'>github.com/bastelfreak/talks</a>
+
+### Thanks for your attention!
+
+.evensmallerimg[![wat talk](wat.png)]
+]
+
+<a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
 
 ???
 
