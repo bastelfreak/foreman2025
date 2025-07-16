@@ -348,7 +348,9 @@ count: false
 ---
 class: center, middle, inverse
 
-# Puppet<br/> Enterprise
+# Puppet Enterprise
+
+## also known as PE
 
 ???
 
@@ -904,7 +906,7 @@ ini_setting { 'enable reporting into Foreman':
 
 * Why does that even work?
 
-* PE doesn't puppet.conf out of the box on puppetservers
+* PE doesn't manage puppet.conf out of the box on puppetservers
 ]
 
 <a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
@@ -963,6 +965,7 @@ ini_setting { 'enable reporting into Foreman':
 * You can already manage OpenVox with the foreman puppet modules!
 
 ```yaml
+---
 puppet::client_package: openvox-agent
 puppet::server::package: openvox-server
 puppetdb::puppetdb_package: openvoxdb
@@ -996,7 +999,7 @@ package { 'oauth':
 ]
 .right-column[
 
-* For years, PE customers just wanted to run Foreman + Running Bolt tasks/plan via API
+* For years, PE customers just wanted to run Foreman + Bolt tasks/plan via API
 
 * Perforce ignored it: https://github.com/puppetlabs/puppet-enterprise_issues/issues/28
 
@@ -1025,6 +1028,8 @@ count: false
 * Perforce ignored it: https://github.com/puppetlabs/puppet-enterprise_issues/issues/28
 
 * We started a little side project https://community.theforeman.org/t/rfc-integrating-bolt-into-remote-execution/39901
+
+.img[![forum screenshot](forum.png)]
 ]
 
 <a href='https://betadots.de' alt='company website betadots'><img src="logo-1181x1181.png" alt="drawing" style="position: fixed; bottom: 12px; left: 20px; width: 100px;"/></a>
@@ -1032,6 +1037,7 @@ count: false
 
 ???
 
+* building it with https://overlookinfratech.com/
 ---
 
 .left-column[
